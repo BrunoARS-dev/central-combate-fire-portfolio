@@ -19,13 +19,13 @@ import {
 import {
   cases,
   differentials,
-  gallery,
   processSteps,
   services,
   siteContent,
   trustItems,
   whatsappUrl,
 } from "@/content/site";
+import { GalleryGrid } from "@/components/sections/gallery-grid";
 import { SectionHeading } from "@/components/sections/section-heading";
 
 const serviceIcons = {
@@ -109,14 +109,7 @@ export function GallerySection() {
     <section id="trabalhos" className="section gallery-section">
       <div className="container-shell">
         <SectionHeading label="Galeria" title="Trabalhos e sistemas em campo" description="Registros reais de instalações, equipamentos e intervenções em diferentes ambientes." />
-        <div className="gallery-grid">
-          {gallery.map((item, index) => (
-            <figure key={item.src} className={`gallery-item gallery-item-${index + 1}`}>
-              <Image src={item.src} alt={item.alt} fill sizes="(max-width: 700px) 100vw, (max-width: 1100px) 50vw, 33vw" />
-              <figcaption><span>0{index + 1}</span>{item.caption}</figcaption>
-            </figure>
-          ))}
-        </div>
+        <GalleryGrid />
       </div>
     </section>
   );

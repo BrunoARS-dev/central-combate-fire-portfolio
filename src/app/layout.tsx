@@ -28,12 +28,25 @@ export const metadata: Metadata = {
     siteName: siteContent.name,
     title: siteContent.title,
     description: siteContent.description,
-    ...(siteUrl ? { url: "/" } : {}),
+    ...(siteUrl
+      ? {
+          url: "/",
+          images: [
+            {
+              url: "/images/projetos/rede-hidrante-instalada.jpeg",
+              alt: "Rede de hidrante instalada pela Central Combate Fire",
+            },
+          ],
+        }
+      : {}),
   },
   twitter: {
     card: "summary_large_image",
     title: siteContent.title,
     description: siteContent.description,
+    ...(siteUrl
+      ? { images: ["/images/projetos/rede-hidrante-instalada.jpeg"] }
+      : {}),
   },
   icons: {
     icon: "/images/marca/logo-central-combate-fire.jpg",

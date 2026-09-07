@@ -37,14 +37,14 @@ export const services = [
 ] as const;
 
 export const gallery = [
-  { src: "/images/servicos/quadro-comando-bombas.jpeg", alt: "Quadro de comando elétrico aberto com componentes organizados", caption: "Quadro de comando", featured: true },
-  { src: "/images/projetos/conjunto-bomba-incendio.jpeg", alt: "Conjunto vermelho de bomba de incêndio com válvulas", caption: "Conjunto de bombeamento", featured: true },
-  { src: "/images/servicos/porta-corta-fogo.jpeg", alt: "Porta corta-fogo cinza instalada e sinalizada", caption: "Porta corta-fogo", featured: false },
-  { src: "/images/servicos/sinalizacao-hidrante.jpeg", alt: "Ponto de hidrante com placas de sinalização", caption: "Sinalização de hidrante", featured: false },
-  { src: "/images/servicos/demarcacao-extintor.jpeg", alt: "Demarcação vermelha e amarela para equipamento de emergência", caption: "Demarcação de segurança", featured: false },
-  { src: "/images/projetos/extintores-reunidos.jpeg", alt: "Grupo de extintores reunidos para serviço", caption: "Extintores", featured: false },
-  { src: "/images/projetos/hidrante-caixa-piso.jpeg", alt: "Ponto de hidrante instalado em caixa no piso", caption: "Ponto de hidrante", featured: false },
-  { src: "/images/servicos/iluminacao-emergencia.jpeg", alt: "Luminária de emergência instalada na parede", caption: "Iluminação de emergência", featured: false },
+  { src: "/images/servicos/quadro-comando-bombas.jpeg", alt: "Quadro de comando elétrico aberto com componentes organizados", caption: "Quadro de comando" },
+  { src: "/images/projetos/conjunto-bomba-incendio.jpeg", alt: "Conjunto vermelho de bomba de incêndio com válvulas", caption: "Conjunto de bombeamento" },
+  { src: "/images/servicos/porta-corta-fogo.jpeg", alt: "Porta corta-fogo cinza instalada e sinalizada", caption: "Porta corta-fogo" },
+  { src: "/images/servicos/sinalizacao-hidrante.jpeg", alt: "Ponto de hidrante com placas de sinalização", caption: "Sinalização de hidrante" },
+  { src: "/images/servicos/demarcacao-extintor.jpeg", alt: "Demarcação vermelha e amarela para equipamento de emergência", caption: "Demarcação de segurança" },
+  { src: "/images/projetos/extintores-reunidos.jpeg", alt: "Grupo de extintores reunidos para serviço", caption: "Extintores" },
+  { src: "/images/projetos/hidrante-caixa-piso.jpeg", alt: "Ponto de hidrante instalado em caixa no piso", caption: "Ponto de hidrante" },
+  { src: "/images/servicos/iluminacao-emergencia.jpeg", alt: "Luminária de emergência instalada na parede", caption: "Iluminação de emergência" },
 ] as const;
 
 export const processSteps = [
