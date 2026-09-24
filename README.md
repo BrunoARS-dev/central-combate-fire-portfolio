@@ -6,6 +6,14 @@ Metropolitana e cidades próximas. O objetivo principal da página é apresentar
 os serviços e trabalhos realizados e direcionar solicitações de orçamento para
 o WhatsApp.
 
+**Acesse:** https://combatefire.brunoaraujo.dev.br
+
+## O que a página apresenta
+
+- Serviços de prevenção, proteção e combate a incêndios.
+- Trabalhos realizados, clientes e área atendida.
+- Contato direto pelo WhatsApp para solicitação de orçamento.
+
 ## Tecnologias
 
 - Next.js 16 com App Router
