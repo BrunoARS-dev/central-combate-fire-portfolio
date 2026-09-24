@@ -1,0 +1,109 @@
+name: Deploy da Central Combate Fire
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+concurrency:
+  group: central-combate-fire-production
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    name: Publicar no servidor
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - name: Configurar acesso SSH
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.SERVER_SSH_KEY }}
+          SERVER_HOST: ${{ secrets.SERVER_HOST }}
+        run: |
+          install -m 700 -d ~/.ssh
+          printf '%s\n' "$SSH_PRIVATE_KEY" > ~/.ssh/deploy_key
+          chmod 600 ~/.ssh/deploy_key
+          ssh-keyscan -H "$SERVER_HOST" >> ~/.ssh/known_hosts
+
+      - name: Atualizar e publicar
+        env:
+          SERVER_HOST: ${{ secrets.SERVER_HOST }}
+          SERVER_USER: ${{ secrets.SERVER_USER }}
+          DEPLOY_SHA: ${{ github.sha }}
+        run: |
+          ssh -i ~/.ssh/deploy_key "$SERVER_USER@$SERVER_HOST" "DEPLOY_SHA=$DEPLOY_SHA bash -s" <<'DEPLOY'
+          set -Eeuo pipefail
+
+          APP_DIR=/home/ubuntu/apps/central-combate-fire
+          CONTAINER=central-combate-fire
+          CANDIDATE=central-combate-fire-candidate
+          IMAGE="central-combate-fire:$DEPLOY_SHA"
+          SITE_URL=https://combatefire.brunoaraujo.dev.br
+          OLD_IMAGE_ID=$(docker inspect "$CONTAINER" --format '{{.Image}}' 2>/dev/null || true)
+
+          wait_for_http() {
+            local url="$1"
+            for attempt in $(seq 1 30); do
+              if curl --fail --silent "$url" >/dev/null 2>&1; then
+                return 0
+              fi
+              sleep 1
+            done
+            return 1
+          }
+
+          rollback() {
+            docker rm -f "$CONTAINER" >/dev/null 2>&1 || true
+            if [ -n "$OLD_IMAGE_ID" ]; then
+              docker run -d \
+                --name "$CONTAINER" \
+                --restart unless-stopped \
+                -p 127.0.0.1:3003:3000 \
+                "$OLD_IMAGE_ID"
+            fi
+          }
+
+          cd "$APP_DIR"
+          git fetch origin main
+          git checkout main
+          git pull --ff-only origin main
+
+          docker build \
+            --build-arg NEXT_PUBLIC_SITE_URL="$SITE_URL" \
+            -t "$IMAGE" \
+            .
+
+          docker rm -f "$CANDIDATE" >/dev/null 2>&1 || true
+          docker run -d \
+            --name "$CANDIDATE" \
+            -p 127.0.0.1:18083:3000 \
+            "$IMAGE"
+
+          if ! wait_for_http http://127.0.0.1:18083/; then
+            docker logs "$CANDIDATE" || true
+            docker rm -f "$CANDIDATE" || true
+            exit 1
+          fi
+
+          docker rm -f "$CANDIDATE"
+          docker rm -f "$CONTAINER" >/dev/null 2>&1 || true
+
+          if ! docker run -d \
+            --name "$CONTAINER" \
+            --restart unless-stopped \
+            -p 127.0.0.1:3003:3000 \
+            "$IMAGE"; then
+            rollback
+            exit 1
+          fi
+
+          if ! wait_for_http http://127.0.0.1:3003/; then
+            docker logs "$CONTAINER" || true
+            rollback
+            exit 1
+          fi
+
+          docker tag "$IMAGE" central-combate-fire:1.0
+          DEPLOY
